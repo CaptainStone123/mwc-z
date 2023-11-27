@@ -1,46 +1,40 @@
 <template>
   <div>
     <h1>Hello User!</h1>
+    <button @click="sendNotification">Send Notification</button>
   </div>
 </template>
 
 <script>
 export default {
-  mounted() {
-    this.startNotification();
-  },
   methods: {
-    startNotification() {
+    sendNotification() {
       if ('Notification' in window) {
-        if (Notification.permission !== 'denied') {
+        if (Notification.permission !== 'granted') {
           this.requestNotificationPermission();
+        } else {
+          this.showNotification();
         }
       } else {
         console.log('This browser does not support desktop notification');
       }
     },
     requestNotificationPermission() {
-      if (Notification.permission !== 'granted') {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            this.sendNotification();
-          }
-        });
-      } else {
-        this.sendNotification();
-      }
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          this.showNotification();
+        }
+      });
     },
-    sendNotification() {
+    showNotification() {
       if (Notification.permission === 'granted') {
         const notification = new Notification('Hi there!');
       }
-      setTimeout(() => {
-        this.sendNotification();
-      }, 10000); // Sending notification every 10 seconds
     }
   }
 };
 </script>
+
 
 
 <!-- <script>
