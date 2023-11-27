@@ -1,4 +1,49 @@
+<template>
+  <div>
+    <h1>Hello User!</h1>
+  </div>
+</template>
+
 <script>
+export default {
+  mounted() {
+    this.startNotification();
+  },
+  methods: {
+    startNotification() {
+      if ('Notification' in window) {
+        if (Notification.permission !== 'denied') {
+          this.requestNotificationPermission();
+        }
+      } else {
+        console.log('This browser does not support desktop notification');
+      }
+    },
+    requestNotificationPermission() {
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            this.sendNotification();
+          }
+        });
+      } else {
+        this.sendNotification();
+      }
+    },
+    sendNotification() {
+      if (Notification.permission === 'granted') {
+        const notification = new Notification('Hi there!');
+      }
+      setTimeout(() => {
+        this.sendNotification();
+      }, 10000); // Sending notification every 10 seconds
+    }
+  }
+};
+</script>
+
+
+<!-- <script>
 import axios from 'axios';
 
 export default {
@@ -332,4 +377,4 @@ export default {
   opacity: 0.5; /* Adjust opacity as needed */
   transition: stroke 0.3s ease;
 }
-</style>
+</style> -->
